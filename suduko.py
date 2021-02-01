@@ -1,10 +1,12 @@
 import copy
 
+''' create an state that the Suduko is in based on the possible values of each square and the correct inputs already known in any relevant squares '''
 class State():
     def __init__(self, possibilitiesIn, valuesIn):
         self.possibilities = possibilitiesIn
         self.values = valuesIn
 
+''' creates a state where no correct values are known and so any values are possible '''
 def create_empty_state():
     possibility_grid = [[[1,2,3,4,5,6,7,8,9],[1,2,3,4,5,6,7,8,9],[1,2,3,4,5,6,7,8,9],[1,2,3,4,5,6,7,8,9],[1,2,3,4,5,6,7,8,9],[1,2,3,4,5,6,7,8,9],[1,2,3,4,5,6,7,8,9],[1,2,3,4,5,6,7,8,9],[1,2,3,4,5,6,7,8,9]],
                         [[1,2,3,4,5,6,7,8,9],[1,2,3,4,5,6,7,8,9],[1,2,3,4,5,6,7,8,9],[1,2,3,4,5,6,7,8,9],[1,2,3,4,5,6,7,8,9],[1,2,3,4,5,6,7,8,9],[1,2,3,4,5,6,7,8,9],[1,2,3,4,5,6,7,8,9],[1,2,3,4,5,6,7,8,9]],
@@ -28,9 +30,11 @@ def create_empty_state():
 
     return State(possibility_grid, empty_values)
 
+''' updates the known correct values in a suduko to the ones given as a parameter '''
 def change_values_grid(stateIn, gridIn):
     stateIn.values = gridIn
 
+''' updates the possible values for any of the variables (squares) in the suduko grid, using the known values of the grid '''
 def update_possibility_grid(stateIn):
     for x in range(9):
         for y in range(9):
@@ -56,6 +60,7 @@ def update_possibility_grid(stateIn):
                         elif x1 == x and y1 == y:
                             stateIn.possibilities[x][y] = [value]
 
+''' uses the possibile values of each varible to update the known correct values of the grid '''
 def fill_squares(stateIn):
     for x in range(9):
         for y in range(9):
@@ -126,6 +131,7 @@ def fill_squares(stateIn):
 
     return "cannot fill"
 
+''' returns the variable (square) of the sudoku grid with the least possible values that does not have an already known value'''
 def get_most_contrained_cell(stateIn):
     lengths = [[999999999, -999, -999]]
     for x in range(9):
@@ -141,6 +147,7 @@ def get_most_contrained_cell(stateIn):
                     lengths.append(current)
     return lengths[0]
 
+''' determines if the suduko is solved '''
 def goal_test(stateIn):
     for x in range(9):
         for y in range(9):
@@ -148,6 +155,7 @@ def goal_test(stateIn):
                 return False
     return True
 
+''' determines if a sudoku grid is solvable given the current 'known correct' values '''
 def valid(stateIn):
     for x in range(9):
         for y in range(9):
@@ -155,16 +163,7 @@ def valid(stateIn):
                 return False
     return True
 
-grid1 = [[None, None, None, None, None, None, None, None, None],
-        [None, None, None, None, None, None, None, None, None],
-        [None, None, None, None, None, None, None, None, None],
-        [None, None, None, None, None, None, None, None, None],
-        [None, None, None, None, None, None, None, None, None],
-        [None, None, None, None, None, None, None, None, None],
-        [None, None, None, None, None, None, None, None, None],
-        [None, None, None, None, None, None, None, None, None],
-        [None, None, None, None, None, None, None, None, None]]
-
+''' creates a suduko to solve - any 9x9 suduko can be inputed here to test or use this program '''
 grid = [[6, None, 9, 7, 5, 1, None, 8, None],
         [None, None, None, None, None, 3, None, None, 4],
         [None, None, None, None, None, None, None, None, None],
@@ -175,16 +174,7 @@ grid = [[6, None, 9, 7, 5, 1, None, 8, None],
         [None, None, None, None, None, None, None, None, 5],
         [7, None, None, None, None, None, None, 6, None]]
 
-grid1 = [[None, None, None, None, None, 2, None, None, None],
-        [None, 2, None, 6, None, None, None, None, None],
-        [None, None, None, None, None, None, 3, None, None],
-        [None, 3, None, None, None, None, None, None, None],
-        [None, None, None, None, None, None, None, None, None],
-        [None, None, None, None, None, 9, None, None, None],
-        [None, None, None, None, None, None, None, None, None],
-        [None, None, None, None, None, None, 7, None, None],
-        [None, None, None, None, None, None, None, None, 6]]
-
+''' solves the given suduko '''
 def solve_sudoku(gridIn):
     state = create_empty_state()
     change_values_grid(state, gridIn)
@@ -220,5 +210,6 @@ def solve_sudoku(gridIn):
                 #print()
     print("cannot solve suduko")
 
+''' displays the solved suduko to the user '''
 for row in solve_sudoku(grid).values:
     print(row)
